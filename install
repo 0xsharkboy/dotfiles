@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Backup existing files
+echo "Creating backup of existing files..."
+backup_dir="$HOME/dotfiles_backup"
+mkdir -p "$backup_dir/.config"
+mkdir -p "$backup_dir/.local/share"
+
+backup_if_exists() {
+    if [ -d "$1" ]; then
+        cp -rf "$1" "$backup_dir/"
+    fi
+}
+
+backup_if_exists "$HOME/.oh-my-zsh"
+backup_if_exists "$HOME/.config/i3"
+backup_if_exists "$HOME/.config/alacritty"
+backup_if_exists "$HOME/.config/nvim"
+backup_if_exists "$HOME/.local/share/nvim"
+
+clear
+
+# Install dependencies
+echo "Installing dependencies..."
+sudo pacman -S zsh npm alacritty neovim
+clear
+
+# Install zsh
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+if [ ! -f "$HOME/.zshrc" ]; then
+    rm -f ~/.zshrc
+fi
+
+mkdir -p "$HOME/.oh-my-zsh/custom/plugins"
+cp -rf .oh-my-zsh/custom/plugins/* "$HOME/.oh-my-zsh/custom/plugins"
+chsh -s /bin/zsh
+cp -f .zshrc ~/
+
+# Install nvchad config
+if [ -d "$HOME/.config/nvim" ]; then
+    rm -rf "$HOME/.config/nvim"
+    rm -rf "$HOME/.local/share/nvim"
+fi
+git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+nvim
+
+# Install alacritty
+if [ -d "$HOME/.config/alacritty" ]; then
+    rm -f "$HOME/.config/alacritty/alacritty.yml"
+fi
+mkdir -p "$HOME/.config/alacritty"
+cp -f .config/alacritty/alacritty.yml "$HOME/.config/alacritty"
+
+cp -rf .wallpaper ~/
+clear
+
+echo "Backup files are stored in ~/dotfiles_backup"
+echo "Done ! Please restart your pc."

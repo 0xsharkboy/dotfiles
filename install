@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CONFIG="$HOME/.config/"
+
 # Backup existing files
 echo "Creating backup of existing files..."
 backup_dir="$HOME/dotfiles_backup"
@@ -13,16 +15,16 @@ backup_if_exists() {
 }
 
 backup_if_exists "$HOME/.oh-my-zsh"
-backup_if_exists "$HOME/.config/i3"
-backup_if_exists "$HOME/.config/alacritty"
-backup_if_exists "$HOME/.config/nvim"
+backup_if_exists "${CONFIG}/i3"
+backup_if_exists "${CONFIG}/alacritty"
+backup_if_exists "${CONFIG}/nvim"
 backup_if_exists "$HOME/.local/share/nvim"
 
 clear
 
 # Install dependencies
 echo "Installing dependencies..."
-sudo pacman -S zsh npm alacritty neovim
+sudo pacman -S zsh npm alacritty neovim ttf-0xproto-nerd
 clear
 
 # Install zsh
@@ -33,27 +35,38 @@ if [ ! -f "$HOME/.zshrc" ]; then
     rm -f ~/.zshrc
 fi
 
-mkdir -p "$HOME/.oh-my-zsh/custom/plugins"
-cp -rf .oh-my-zsh/custom/plugins/* "$HOME/.oh-my-zsh/custom/plugins"
+# Install omz AutoSuggestions and VSCode plugins
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/valentinocossar/vscode.git ~/.zsh/vscode
+
 chsh -s /bin/zsh
-cp -f .zshrc ~/
+cp -f .zshrc $HOME/
 
 # Install nvchad config
-if [ -d "$HOME/.config/nvim" ]; then
-    rm -rf "$HOME/.config/nvim"
+if [ -d "${CONFIG}/nvim" ]; then
+    rm -rf "${CONFIG}/nvim"
     rm -rf "$HOME/.local/share/nvim"
 fi
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 nvim
 
-# Install alacritty
-if [ -d "$HOME/.config/alacritty" ]; then
-    rm -f "$HOME/.config/alacritty/alacritty.yml"
-fi
-mkdir -p "$HOME/.config/alacritty"
-cp -f .config/alacritty/alacritty.yml "$HOME/.config/alacritty"
+cp -f .config/nvim/init.lua ${CONFIG}/nvim/init.lua
 
-cp -rf .wallpaper ~/
+# Install vim plug for Neowim
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+# Install vim config
+cp -f ./.vimrc $HOME/
+
+# Install alacritty
+if [ -d "${CONFIG}/alacritty" ]; then
+    rm -f "${CONFIG}/alacritty/alacritty.toml"
+fi
+mkdir -p "${CONFIG}/alacritty"
+cp -f ".config/alacritty/alacritty.toml" "${CONFIG}/alacritty"
+
+cp -rf .wallpaper $HOME/
 clear
 
 echo "Backup files are stored in ~/dotfiles_backup"

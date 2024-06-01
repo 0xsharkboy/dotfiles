@@ -1,0 +1,71 @@
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.bright]
+black = "#666666"
+blue = "#48c6ff"
+cyan = "#63e7f0"
+green = "#ccff00"
+magenta = "#be67e1"
+red = "#ff00a0"
+white = "#f3f3f3"
+yellow = "#ff9f00"
+
+[colors.cursor]
+cursor = "#c5c5c5"
+text = "#1c1c1c"
+
+[colors.normal]
+black = "#1c1c1c"
+blue = "#048ac7"
+cyan = "#0ac1cd"
+green = "#cee318"
+magenta = "#833c9f"
+red = "#ff005b"
+white = "#e5e5e5"
+yellow = "#ffe755"
+
+[colors.primary]
+background = "#1c1c1c"
+foreground = "#c5c5c5"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 7
+
+[font.bold]
+family = "0xProtoNerdFontMono"
+style = "Medium"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.italic]
+family = "Noto Sans Mono"
+style = "Light Italic"
+
+[font.normal]
+family = "0xProtoNerdFontMono"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 0
+
+[scrolling]
+history = 1000
+multiplier = 10
+
+[window]
+decorations = "full"
+
+[window.dimensions]
+columns = 0
+lines = 0
+
+[window.padding]
+x = 5
+y = 5

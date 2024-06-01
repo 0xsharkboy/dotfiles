@@ -112,5 +112,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias update="sudo pacman -Syu"
+alias timestamp="date +%s"
 
 setopt autocd
